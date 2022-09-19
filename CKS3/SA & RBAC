@@ -1,0 +1,41 @@
+In the dev namespace create below resources:
+
+- A role dev-write with access to get, watch, list and create pods in the same namespace.
+
+- A Service account called developer and then bind dev-write role to it with a rolebinding called dev-write-binding.
+
+- Finally, create a pod using the template /root/dev-pod.yaml. The pod should run with the service account developer. Update /root/dev-pod.yaml as necessary
+
+Create role dev-write as below
+
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: dev
+  name: dev-write
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list", "create"]
+EOF
+Create service account developer and rolebinding as below
+
+kubectl create sa developer -n dev
+
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-write-binding
+  namespace: dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: dev-write
+subjects:
+- kind: ServiceAccount
+  name: developer
+  namespace: dev
+EOF
+Update serviceaccount in /root/dev-pod.yaml to developer and deploy pod
