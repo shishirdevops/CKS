@@ -1,0 +1,4 @@
+The fixes are mentioned in the same report. Update the kube-apiserver static pod definition file as per the recommendations.
+
+Make sure that --authorization-mode=Node,RBAC
+.
