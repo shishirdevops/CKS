@@ -1,3 +1,8 @@
+A number of pods have been created in the delta namespace. Using the trivy tool, which has been installed on the controlplane, identify and delete pods except the ones with least number of CRITICAL level vulnerabilities.
+
+Note: Do not modify the objects in anyway other than deleting the ones that have critical vulnerabilities.
+######
+
 First, get all the images of pods running in the delta namespace:
 
 $ kubectl -n delta get pods -o json | jq -r '.items[].spec.containers[].image'
