@@ -1,0 +1,39 @@
+On the controlplane node, load the AppArmor profile: apparmor_parser -q /etc/apparmor.d/frontend The profile name used by this file is restricted-frontend (open the /etc/apparmor.d/frontend file to check).
+
+
+To verify that the profile was successfully loaded, use the aa-status command:
+
+root@controlplane:~# aa-status | grep restricted-frontend
+   restricted-frontend
+root@controlplane:~#
+The pod should only use the service account called frontend-default as it has the least privileges of all the service accounts in the omni namespace (excluding default) The other service accounts, fe and frontend have additional permissions (check the roles and rolebindings associated with these accounts)
+
+Use the below YAML File to re-create the frontend-site pod:
+
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: localhost/restricted-frontend #Apply profile 'restricted-fronend' on 'nginx' container 
+  labels:
+    run: nginx
+  name: frontend-site
+  namespace: omni
+spec:
+  serviceAccount: frontend-default #Use the service account with least privileges
+  containers:
+  - image: nginx:alpine
+    name: nginx
+    volumeMounts:
+    - mountPath: /usr/share/nginx/html
+      name: test-volume
+  volumes:
+  - name: test-volume
+    hostPath:
+       path: /data/pages
+       type: Directory
+Next, Delete the unused service accounts in the 'omni' namespace.
+
+controlplane$ kubectl -n omni delete sa frontend
+controlplane$ kubectl -n omni delete sa fe
+Chec
