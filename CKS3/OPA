@@ -1,0 +1,12 @@
+Try to create a pod using the template defined in /root/beta-pod.yaml in the namespace beta. This should result in a failure.
+Troubleshoot and fix the OPA validation issue while creating the pod. You can update /root/beta-pod.yaml as necessary.
+
+The Rego configuration map for OPA is in untrusted-registry under opa namespace.
+
+NOTE: In the end pod need not to be successfully running but make sure that it passed the OPA validation and gets created.
+
+If you inspect the rego file defined in the configmap called untrusted-registry, you will see that it denies repositories that do not begin with kodekloud.io/.
+To fix this, update the image URL to kodekloud.io/ and then create the pod.
+
+  - image: kodekloud.io/google-samples/node-hello:1.0
+NOTE: The pod will now be created as it passes the policy checks. However, it will not run as such an image does not exist.
