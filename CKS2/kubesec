@@ -1,0 +1,21 @@
+A pod definition file has been created at /root/CKS/simple-pod.yaml . Using the kubesec tool, 
+generate a report for this pod definition file and fix the major issues so that the subsequent scan report no longer fails.
+Once done, generate the report again and save it to the file /root/CKS/kubesec-report.txt
+
+
+Remove the SYS_ADMIN capability from the container for the simple-webapp-1 pod in the POD definition file and re-run the scan.
+
+controlplane $ kubesec scan /root/CKS/simple-pod.yaml > /root/CKS/kubesec-report.txt
+The fixed report should PASS with a message like this:
+
+[
+  {
+    "object": "Pod/simple-webapp-1.default",
+    "valid": true,
+    "fileName": "API",
+    "message": "Passed with a score of 3 points",
+    "score": 3,
+  },
+.
+.
+.
