@@ -1,0 +1,14 @@
+A kube-bench report is available at the Kube-bench assessment report tab. Fix the tests with FAIL status for 4 Worker Node Security Configuration .
+Make changes to the /var/lib/kubelet/config.yaml
+After you have fixed the issues, 
+you can update the published report in the Kube-bench assessment report tab by running /root/publish_kubebench.sh to validate results.
+
+Update /var/lib/kubelet/config.yamlas below
+
+Change authorization to Webhook for authorization-mode failure
+
+authorization:
+  mode: Webhook
+Add below for KernelDefaults Failure
+
+protectKernelDefaults: true
