@@ -1,0 +1,19 @@
+We have a pod definition template /root/kubesec-pod.yaml on controlplane host. Scan this template using the kubesec tool and you will notice some failures.
+
+Fix the failures in this file and save the success report in /root/kubesec_success_report.json.
+
+Make sure that the final kubesec scan status is passed.
+########
+Run
+
+kubesec scan /root/kubesec-pod.yaml
+You will see failure message as
+
+containers[] .securityContext .privileged == true
+Update privileged flag in /root/kubesec-pod.yaml
+
+privileged: false
+Then run
+
+kubesec scan /root/kubesec-pod.yaml
+kubesec scan /root/kubesec-pod.yaml > /root/kubesec_success_report.json
