@@ -1,0 +1,19 @@
+Copy the audit.json seccomp profile to /var/lib/kubelet/seccomp/profiles on the controlplane node:
+
+controlplane$ mv /root/CKS/audit.json /var/lib/kubelet/seccomp/profiles
+Next, recreate the pod using the below YAML File
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx
+  name: audit-nginx
+spec:
+  securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: profiles/audit.json
+  containers:
+  - image: nginx
+    name: nginx
