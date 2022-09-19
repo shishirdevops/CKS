@@ -1,0 +1,14 @@
+First, get all the images of pods running in the delta namespace:
+
+$ kubectl -n delta get pods -o json | jq -r '.items[].spec.containers[].image'
+Next, scan each image using trivy image command. For example:
+
+$ trivy image --severity CRITICAL kodekloud/webapp-delayed-start
+Don't delete the associated pod which image has a least number of CRITICAL vulnerabilities as compared to others.
+
+For example, if kodekloud/webapp-delayed-start, httpd and nginx:1.16 have these vulnerabilities:
+
+$ kubectl -n delta delete pod simple-webapp-1
+$ kubectl -n delta delete pod simple-webapp-3
+$ kubectl -n delta delete pod simple-webapp-4
+Ignore pods which use images of lower severity such as HIGH, MEDIUM, LOW e.t.c
