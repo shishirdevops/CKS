@@ -1,0 +1,15 @@
+Use the below YAML file to create the pod with the gvisor runtime class:
+
+apiVersion: v1
+kind: Pod
+metadata:
+    labels:
+        run: busy-rx100
+    name: busy-rx100
+    namespace: production
+spec:
+    runtimeClassName: gvisor
+    containers:
+        -
+            image: nginx
+            name: busy-rx100
