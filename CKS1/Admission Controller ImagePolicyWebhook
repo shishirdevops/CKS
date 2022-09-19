@@ -1,3 +1,17 @@
+We need to make sure that when pods are created in this cluster, they cannot use the latest image tag, irrespective of the repository being used.
+To achieve this, a simple Admission Webhook Server has been developed and deployed. A service called image-bouncer-webhook is exposed in the cluster internally. This Webhook server ensures that the developers of the team cannot use the latest image tag. Make use of the following specs to integrate it with the cluster using an ImagePolicyWebhook:
+
+
+Create a new admission configuration file at /etc/admission-controllers/admission-configuration.yaml
+The kubeconfig file with the credentials to connect to the webhook server is located at /root/CKS/ImagePolicy/admission-kubeconfig.yaml. Note: The directory /root/CKS/ImagePolicy/ has already been mounted on the kube-apiserver at path /etc/admission-controllers so use this path to store the admission configuration.
+Make sure that if the latest tag is used, the request must be rejected at all times.
+Enable the Admission Controller.
+Finally, delete the existing pod in the magnum namespace that is in violation of the policy and recreate it, ensuring the same image but using the tag 1.27.
+
+NOTE: If the kube-apiserver becomes unresponsive, this can affect the validation of this exam. In such a case, please restore the kube-apiserver using the backup file created at: /root/backup/kube-apiserver.yaml, wait for the API to be available again and proceed.
+######
+
+
 Create the below admission-configuration inside /root/CKS/ImagePolicy directory in the controlplane node:
 
 apiVersion: apiserver.config.k8s.io/v1
