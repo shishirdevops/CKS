@@ -1,3 +1,8 @@
+Create a new pod called audit-nginx in the default namespace using the nginx image. Secure the syscalls that this pod can use by using the audit.json seccomp profile in the pod's security context.
+
+The audit.json is provided at /root/CKS directory. Make sure to move it under the profiles directory inside the default seccomp directory before creating the pod
+######
+
 Copy the audit.json seccomp profile to /var/lib/kubelet/seccomp/profiles on the controlplane node:
 
 controlplane$ mv /root/CKS/audit.json /var/lib/kubelet/seccomp/profiles
