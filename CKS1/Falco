@@ -1,3 +1,13 @@
+There is something suspicious happening with one of the pods running an httpd image in this cluster.
+The Falco service shows frequent alerts that start with: File below a known binary directory opened for writing.
+Identify the rule causing this alert and update it as per the below requirements:
+
+Output should be displayed as: CRITICAL File below a known binary directory opened for writing (user=user_name file_updated=file_name command=command_that_was_run)
+Alerts are logged to /opt/security_incidents/alerts.log
+Do not update the default rules file directly. Rather use the falco_rules.local.yaml file to override.
+Note: Once the alert has been updated, you may have to wait for up to a minute for the alerts to be written to the new log location.
+##
+
 Enable file_output in /etc/falco/falco.yaml on the controlplane node:
 
 file_output:
