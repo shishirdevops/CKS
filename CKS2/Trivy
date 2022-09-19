@@ -1,0 +1,26 @@
+Create a new pod called secure-nginx-pod in the seth namespace. Use one of the images from the below which has a least number of CRITICAL vulnerabilities.
+
+nginx
+nginx:1.19
+nginx:1.17
+nginx:1.20
+gcr.io/google-containers/nginx
+bitnami/nginx:latest
+
+
+Run trivy image scan on all of the images and check which one has the least number of CRITICAL vulnerabilities.
+
+root@controlplane:~# trivy image --severity CRITICAL gcr.io/google-containers/nginx 
+2022-01-25T20:36:08.878Z        WARN    You should avoid using the :latest tag as it is cached. You need to specify '--clear-cache' option when :latest image is changed
+2022-01-25T20:36:08.881Z        INFO    Need to update DB
+2022-01-25T20:36:08.882Z        INFO    Downloading DB...
+25.67 MiB / 25.67 MiB [----------------------------------------------------------------] 100.00% 13.68 MiB p/s 2s
+2022-01-25T20:36:11.357Z        INFO    Detecting Ubuntu vulnerabilities...
+2022-01-25T20:36:11.372Z        INFO    Trivy skips scanning programming language libraries because no supported file was detected
+
+gcr.io/google-containers/nginx (ubuntu 14.04)
+=============================================
+Total: 1 (CRITICAL: 1)
+Next, use this image to create the pod
+
+controlplane $ kubectl -n seth run secure-nginx-pod --image gcr.io/google-containers/nginx
