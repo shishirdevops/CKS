@@ -1,0 +1,20 @@
+martin is a developer who needs access to work on the dev-a, dev-b and dev-z namespace. He should have the ability to carry out any operation on any pod in dev-a and dev-b namespaces. However, on the dev-z namespace, he should only have the permission to get and list the pods.
+The current set-up is too permissive and violates the above condition. Use the above requirement and secure martin's access in the cluster. You may re-create objects, however, make sure to use the same name as the ones in effect currently.
+
+
+The role called dev-user-access has been created for all three namespaces: dev-a, dev-b and dev-z. However, the role in the 'dev-z' namespace grants martin access to all operation on all pods. To fix this, delete and re-create the role using the following YAML:
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+    name: dev-user-access
+    namespace: dev-z
+rules:
+    -
+        apiGroups:
+            - ""
+        resources:
+            - pods
+        verbs:
+            - get
+            - list
