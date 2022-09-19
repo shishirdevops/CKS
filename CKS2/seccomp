@@ -1,0 +1,37 @@
+A pod has been created in the omega namespace using the pod definition file located at /root/CKS/omega-app.yaml. However, there is something wrong with it and the pod is not in a running state.
+We have used a custom seccomp profile located at /var/lib/kubelet/seccomp/custom-profile.
+json to ensure that this pod can only make use of limited syscalls to the Linux Kernel of the host operating system. 
+However, it appears the profile does not allow the read and write syscalls. Fix this by adding it to the profile and use it to start the pod.
+
+The path to the seccomp profile is incorrectly specified for the omega-app pod. As per the question, the profile is created at /var/lib/kubelet/seccomp/custom-profiles.json
+
+controlplane $ kubectl -n omega describe omega-app
+.
+.
+.
+Events:
+  Type     Reason  Age              From             Message
+  ----     ------  ----             ----             -------
+  Normal   Pulled  5s (x3 over 7s)  kubelet, node01  Container image "hashicorp/http-echo:0.2.3" already present on machine
+  Warning  Failed  5s (x3 over 7s)  kubelet, node01  Error: failed to generate security options for container "test-container": failed to generate seccomp security options for container: cannot load seccomp profile "/var/lib/kubelet/seccomp/profiles/custom-profile.json": open /var/lib/kubelet/seccomp/profiles/custom-profile.json: no such file or directory
+Fix the seccomp profile path in the POD Definition file:
+
+securityContext:
+      seccompProfile:
+        localhostProfile: custom-profile.json
+        type: Localhost
+Next, update the custom-profile.json to allow 'read' and 'write' syscalls. Once done, you should see an output similar to below:
+
+controlplane $ cat /var/lib/kubelet/seccomp/custom-profile.json | jq -r '.syscalls[].names[]' | grep -w write
+write
+
+controlplane $ cat /var/lib/kubelet/seccomp/custom-profile.json | jq -r '.syscalls[].names[]' | grep -w read 
+read
+Finally, re-create the pod
+
+controlplane $ kubectl replace -f /root/CKS/omega-app.yaml
+The POD should now run successfully.
+
+NOTE: It may still run even if the above two syscalls are not added. However, adding the syscalls is required to successfully complete this question.
+
+
