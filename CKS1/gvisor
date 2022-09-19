@@ -1,3 +1,8 @@
+A pod called busy-rx100 has been created in the production namespace. Secure the pod by recreating it using the runtimeClass called gvisor. You may delete and recreate the pod.
+
+Note: As long as the pod is recreated with the correct runtimeClass, the task will be marked correct. This lab environment does not support gvisor at the moment so if the pod is not in a running state, ignore it and move on to the next question.
+##
+
 Use the below YAML file to create the pod with the gvisor runtime class:
 
 apiVersion: v1
